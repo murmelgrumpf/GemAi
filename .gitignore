@@ -45,5 +45,5 @@ tags
 # Persistent undo
 [._]*.un~
 
-secrets.txt
+db/*
 # End of https://www.toptal.com/developers/gitignore/api/go,vim

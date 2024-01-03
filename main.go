@@ -8,7 +8,8 @@ import (
 	"syscall"
 
 	"github.com/GemAi/configs"
-	"github.com/GemAi/handlers"
+	"github.com/GemAi/core"
+
 	"github.com/bwmarrin/discordgo"
 )
 
@@ -21,12 +22,13 @@ func init() {
 	flag.StringVar(&Token, "t", "", "Bot Token")
 	flag.Parse()
 
+	core.InitSlashCommands()
+
 	if Token == "" {
 		Token = configs.GetBotParam("Token")
 	} else {
 		configs.SetBotParam("Token", Token)
 	}
-	//fmt.Printf(configs.GetBotParam("Token"))
 }
 
 func main() {
@@ -37,19 +39,21 @@ func main() {
 		return
 	}
 
-	dg.AddHandler(handlers.MessageCreated)
+	dg.AddHandler(core.RegisterSlashCommands)
+
+	dg.AddHandler(core.MessageCreated)
 
 	// In this example, we only care about receiving message events.
 	dg.Identify.Intents = discordgo.IntentsGuildMessages
 
 	// Open a websocket connection to Discord and begin listening.
 	err = dg.Open()
-
 	if err != nil {
 		fmt.Println("error opening connection,", err)
 		return
-
 	}
+
+	core.ApplySlashCommands(dg, "475460805903515678")
 
 	// Wait here until CTRL-C or other term signal is received.
 	fmt.Println("Bot is now running.  Press CTRL-C to exit.")

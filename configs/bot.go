@@ -34,7 +34,10 @@ func SetBotParam(name string, value string) {
 	}
 
 	if len(par) > 0 {
-		err = table.Update(func(p param) param { p.Value = value; return p }, func(p param) bool { return p.Name == name })
+		err = table.Update(
+			func(p param) param { p.Value = value; return p },
+			func(p param) bool { return p.Name == name },
+		)
 		if err != nil {
 			panic(err)
 		}

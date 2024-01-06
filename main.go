@@ -22,7 +22,7 @@ func init() {
 	flag.StringVar(&Token, "t", "", "Bot Token")
 	flag.Parse()
 
-	core.InitSlashCommands()
+	core.InitFeatures()
 
 	if Token == "" {
 		Token = configs.GetBotParam("Token")

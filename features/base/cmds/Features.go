@@ -1,26 +1,22 @@
-package cmds_test
+package cmds_base
 
 import (
-	"fmt"
-
 	"github.com/GemAi/features"
 
 	"github.com/bwmarrin/discordgo"
 )
 
-func Ping(_ *features.FeatureInfos) *features.Cmd {
+func Features(_ *features.FeatureInfos) *features.Cmd {
 	return &features.Cmd{
 		Command: &discordgo.ApplicationCommand{
-			Name:        "ping",
-			Description: "Sends pong back",
+			Name:        "features",
+			Description: "Shows all the available features",
 		},
-		Function: pingFunction,
+		Function: featuresFunction,
 	}
 }
 
-func pingFunction(s *discordgo.Session, i *discordgo.InteractionCreate) {
-	fmt.Println("hallo")
-
+func featuresFunction(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseChannelMessageWithSource,
 		Data: &discordgo.InteractionResponseData{

@@ -1,12 +1,10 @@
 package configs
 
 import (
-	"fmt"
-
 	tiny "github.com/Yiwen-Chan/tinydb"
 )
 
-type param struct {
+type botParam struct {
 	Name  string `json:"name"`
 	Value string `json:"value"`
 }
@@ -14,7 +12,6 @@ type param struct {
 var botParams string = "db/botParams.json"
 
 func SetBotParam(name string, value string) {
-	fmt.Println(name + " - " + value)
 	storage, err := tiny.JSONStorage(botParams)
 	if err != nil {
 		panic(err)
@@ -26,17 +23,17 @@ func SetBotParam(name string, value string) {
 		panic(err)
 	}
 
-	table := tiny.GetTable[param](database)
+	table := tiny.GetTable[botParam](database)
 
-	par, err := table.Select(func(p param) bool { return p.Name == name })
+	par, err := table.Select(func(p botParam) bool { return p.Name == name })
 	if err != nil {
 		panic(err)
 	}
 
 	if len(par) > 0 {
 		err = table.Update(
-			func(p param) param { p.Value = value; return p },
-			func(p param) bool { return p.Name == name },
+			func(p botParam) botParam { p.Value = value; return p },
+			func(p botParam) bool { return p.Name == name },
 		)
 		if err != nil {
 			panic(err)
@@ -44,7 +41,7 @@ func SetBotParam(name string, value string) {
 		return
 	}
 
-	err = table.Insert(param{name, value})
+	err = table.Insert(botParam{name, value})
 	if err != nil {
 		panic(err)
 	}
@@ -63,12 +60,15 @@ func GetBotParam(name string) string {
 		panic(err)
 	}
 
-	table := tiny.GetTable[param](database)
+	table := tiny.GetTable[botParam](database)
 
-	par, err := table.Select(func(p param) bool { return p.Name == name })
+	par, err := table.Select(func(p botParam) bool { return p.Name == name })
 	if err != nil {
 		panic(err)
 	}
 
-	return par[0].Value
+	if len(par) > 0 {
+		return par[0].Value
+	}
+	return ""
 }

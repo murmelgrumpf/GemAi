@@ -5,4 +5,12 @@ import (
 	"github.com/GemAi/features/test/cmds"
 )
 
-var Cmds = []*features.Cmd{&cmds_test.Ping}
+var Feature = features.Feature{
+	Id:          "test",
+	Name:        "Test",
+	Description: "Testcommands, can be ignored",
+	Emoji:       "gear",
+	GetCommands: func(infos *features.FeatureInfos) []*features.Cmd {
+		return []*features.Cmd{cmds_test.Ping(infos)}
+	},
+}

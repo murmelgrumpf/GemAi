@@ -39,7 +39,7 @@ func main() {
 		return
 	}
 
-	dg.AddHandler(core.RegisterSlashCommands)
+	dg.AddHandler(core.InteractionCreate)
 
 	dg.AddHandler(core.MessageCreated)
 
@@ -53,7 +53,9 @@ func main() {
 		return
 	}
 
-	core.ApplySlashCommands(dg, "475460805903515678")
+	dg.AddHandler(func(s *discordgo.Session, gc *discordgo.GuildCreate) {
+		core.RegisterSlashCommands(dg, gc.ID)
+	})
 
 	// Wait here until CTRL-C or other term signal is received.
 	fmt.Println("Bot is now running.  Press CTRL-C to exit.")

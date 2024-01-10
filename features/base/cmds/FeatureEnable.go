@@ -7,10 +7,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-var featureIdNamesEnable map[string]string
-
-func FeatureEnable(infos *features.FeatureInfos) *features.Cmd {
-	featureIdNamesEnable = infos.FeatureIdNames
+func FeatureEnable() *features.Cmd {
 	return &features.Cmd{
 		Command: &discordgo.ApplicationCommand{
 			Name:        "feature-enable",
@@ -21,7 +18,7 @@ func FeatureEnable(infos *features.FeatureInfos) *features.Cmd {
 					Name:        "feature",
 					Description: "Feature",
 					Required:    true,
-					Choices:     infos.FeatureChoices,
+					Choices:     features.Infos.FeatureChoices,
 				},
 			},
 		},
@@ -31,12 +28,12 @@ func FeatureEnable(infos *features.FeatureInfos) *features.Cmd {
 
 func featureEnableFunction(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	feature := utils.Options(i)["feature"].StringValue()
-	err := features.Enable(feature, i.GuildID)
-	returnMessage := "***" + featureIdNamesEnable[feature] + "*** was enabled :white_check_mark:"
+	err := features.Enable(feature, i.GuildID, s)
+	returnMessage := "***" + features.Infos.FeatureIdNames[feature] + "*** was enabled :white_check_mark:"
 	if err != nil {
-		returnMessage = "***" + featureIdNamesEnable[feature] + "*** could not be enabled :x:"
+		returnMessage = "***" + features.Infos.FeatureIdNames[feature] + "*** could not be enabled :x:"
 	}
-	s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+	utils.InteractionRespond(s, i, &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseChannelMessageWithSource,
 		Data: &discordgo.InteractionResponseData{
 			Content: returnMessage,

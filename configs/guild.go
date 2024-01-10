@@ -11,6 +11,8 @@ type guildParam struct {
 
 var guildParams string = "db/guildParams.json"
 
+var guildMemory = map[string]map[string]bool{}
+
 func SetGuildParam(guildId string, features map[string]bool) {
 	storage, err := tiny.JSONStorage(guildParams)
 	if err != nil {
@@ -45,10 +47,15 @@ func SetGuildParam(guildId string, features map[string]bool) {
 	if err != nil {
 		panic(err)
 	}
+	guildMemory[guildId] = features
 
 }
 
 func GetGuildParam(guildId string) map[string]bool {
+	if guildParam, ok := guildMemory[guildId]; ok {
+		return guildParam
+	}
+
 	storage, err := tiny.JSONStorage(guildParams)
 	if err != nil {
 		panic(err)
@@ -68,6 +75,7 @@ func GetGuildParam(guildId string) map[string]bool {
 	}
 
 	if len(par) > 0 {
+		guildMemory[guildId] = par[0].Features
 		return par[0].Features
 	}
 	return nil

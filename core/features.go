@@ -22,17 +22,18 @@ var commands = []*features.Cmd{}
 var commandsMap = map[string]*features.Cmd{}
 
 var featureInfos = features.FeatureInfos{
+	Features:    &allFeatures,
 	FeaturesMap: featuresMap,
 
 	FeatureChoices:  featureChoices,
 	FeatureIdNames:  featureIdNames,
 	DefaultFeatures: defaultFeatures,
 
-	Commands:    commands,
 	CommandsMap: commandsMap,
 }
 
 func InitFeatures() {
+	features.SetFeatureInfos(&featureInfos)
 	for _, feat := range allFeatures {
 		featuresMap[feat.Id] = feat
 		featureChoices = append(featureChoices, &discordgo.ApplicationCommandOptionChoice{
@@ -46,9 +47,11 @@ func InitFeatures() {
 	features.SetDefaultFeatures(defaultFeatures)
 
 	for _, feat := range allFeatures {
-
-		commands = append(commands, feat.GetCommands(&featureInfos)...)
-
+		if feat.GetCommands == nil {
+			continue
+		}
+		feat.Commands = feat.GetCommands()
+		commands = append(commands, feat.Commands...)
 	}
 
 	for _, command := range commands {

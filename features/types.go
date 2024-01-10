@@ -4,11 +4,12 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-type CmdFunc func(*discordgo.Session, *discordgo.InteractionCreate)
+type InteractionFunc func(*discordgo.Session, *discordgo.InteractionCreate)
 
 type Cmd struct {
-	Command  *discordgo.ApplicationCommand
-	Function CmdFunc
+	Command                *discordgo.ApplicationCommand
+	Function               InteractionFunc
+	MsgInteractionFunction InteractionFunc
 }
 
 type Feature struct {
@@ -16,13 +17,14 @@ type Feature struct {
 	Name        string
 	Description string
 	Emoji       string
-	GetCommands func(*FeatureInfos) []*Cmd
+	GetCommands func() []*Cmd
+	Commands    []*Cmd
 }
 
 type FeatureInfos struct {
+	Features    *[2]*Feature
 	FeaturesMap map[string]*Feature
 
-	Commands    []*Cmd
 	CommandsMap map[string]*Cmd
 
 	FeatureChoices  FeatureChoices

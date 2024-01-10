@@ -1,6 +1,8 @@
 package utils
 
-import "github.com/bwmarrin/discordgo"
+import (
+	"github.com/bwmarrin/discordgo"
+)
 
 func Options(i *discordgo.InteractionCreate) map[string]*discordgo.ApplicationCommandInteractionDataOption {
 	options := i.ApplicationCommandData().Options
@@ -11,4 +13,13 @@ func Options(i *discordgo.InteractionCreate) map[string]*discordgo.ApplicationCo
 		optionMap[opt.Name] = opt
 	}
 	return optionMap
+}
+
+func RegisterSlashCommand(s *discordgo.Session, guildId string, cmd *discordgo.ApplicationCommand) (*discordgo.ApplicationCommand, error) {
+	return s.ApplicationCommandCreate(s.State.User.ID, guildId, cmd)
+}
+
+func UnRegisterSlashCommandsFeature(s *discordgo.Session, guildId string, cmdId string) error {
+	err := s.ApplicationCommandDelete(s.State.User.ID, guildId, cmdId)
+	return err
 }

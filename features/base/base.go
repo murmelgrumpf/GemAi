@@ -9,12 +9,12 @@ var Feature = features.Feature{
 	Id:          "base",
 	Name:        "Base",
 	Description: "The Base Commands. You can't disable this feature",
-	Emoji:       "brick",
-	GetCommands: func(infos *features.FeatureInfos) []*features.Cmd {
+	Emoji:       "🧱",
+	GetCommands: func() []*features.Cmd {
 		return []*features.Cmd{
-			cmds_base.FeatureEnable(infos),
-			cmds_base.FeatureDisable(infos),
-			cmds_base.Features(infos),
+			cmds_base.FeatureEnable(),
+			cmds_base.FeatureDisable(),
+			cmds_base.Features(),
 		}
 	},
 }

@@ -25,7 +25,7 @@ func DefaultEmoji(emoji string) discordgo.ComponentEmoji {
 	}
 }
 
-func SendError(s *discordgo.Session, i *discordgo.InteractionCreate, errMsg string) {
+func createErrorEmbed(errMsg string) *[]*discordgo.MessageEmbed {
 	stacktrace := "```\n" + errMsg + "\n```\n"
 	pc := make([]uintptr, 20) // at least 1 entry needed
 	stackLen := runtime.Callers(2, pc)
@@ -47,12 +47,23 @@ func SendError(s *discordgo.Session, i *discordgo.InteractionCreate, errMsg stri
 			Color:       EmbedColorError,
 		},
 	}
+	return &embed
+}
 
+func SendError(s *discordgo.Session, i *discordgo.InteractionCreate, errMsg string) {
 	s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseChannelMessageWithSource,
 		Data: &discordgo.InteractionResponseData{
-			Embeds: embed,
+			Embeds: *createErrorEmbed(errMsg),
 		},
+	})
+}
+
+func EditMessageError(s *discordgo.Session, i *discordgo.InteractionCreate, errMsg string) {
+	empty := ""
+	s.InteractionResponseEdit(i.Interaction, &discordgo.WebhookEdit{
+		Content: &empty,
+		Embeds:  createErrorEmbed(errMsg),
 	})
 }
 

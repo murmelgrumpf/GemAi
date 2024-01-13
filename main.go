@@ -7,7 +7,6 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/GemAi/configs"
 	"github.com/GemAi/core"
 
 	"github.com/bwmarrin/discordgo"
@@ -23,12 +22,6 @@ func init() {
 	flag.Parse()
 
 	core.InitFeatures()
-
-	if Token == "" {
-		Token = configs.GetBotParam("Token")
-	} else {
-		configs.SetBotParam("Token", Token)
-	}
 }
 
 func main() {

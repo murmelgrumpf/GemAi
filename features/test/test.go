@@ -11,6 +11,6 @@ var Feature = features.Feature{
 	Description: "Testcommands, can be ignored",
 	Emoji:       "⚙️",
 	GetCommands: func() []*features.Cmd {
-		return []*features.Cmd{cmds_test.Ping()}
+		return []*features.Cmd{cmds_test.Ping(), cmds_test.Ollama()}
 	},
 }

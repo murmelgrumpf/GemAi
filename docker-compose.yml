@@ -1,0 +1,30 @@
+services:
+  gem-ai:
+    build: .
+    networks:
+      test:
+    env_file: .env
+    volumes: 
+      - mini-db:/app/db
+
+  ollama-test:
+    networks:
+      test:
+    image: ollama/ollama 
+    volumes:
+      - ollama-test:/root/.ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+volumes:
+  mini-db:    
+  ollama-test:
+
+networks:
+  test:
+    driver: bridge
